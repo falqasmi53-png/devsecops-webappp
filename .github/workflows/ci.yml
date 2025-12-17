@@ -26,21 +26,25 @@ jobs:
     - name: Run unit tests
       run: pytest || echo "No tests yet"
 
+    # ---------- SAST ----------
     - name: Run Bandit (SAST)
       run: bandit -r . || true
 
+    # ---------- SCA ----------
     - name: Run pip-audit (SCA)
       run: |
         pip install pip-audit
         pip-audit || true
 
+    # ---------- Run Web App ----------
     - name: Run application
       run: |
         python app.py &
         sleep 10
 
+    # ---------- DAST ----------
     - name: Run OWASP ZAP (DAST)
-  uses: zaproxy/action-baseline@v0.10.0
-  with:
-    target: 'http://localhost:5000'
-  continue-on-error: true
+      uses: zaproxy/action-baseline@v0.10.0
+      with:
+        target: 'http://localhost:5000'
+      continue-on-error: true
